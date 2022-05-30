@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DocPartialCrawler = void 0;
 const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 const file_1 = require("../file");
 const io_1 = require("../io");
 const parser_1 = require("../parser");
@@ -38,8 +39,14 @@ class DocPartialCrawler {
     findFilesInDir(dir) {
         const files = [];
         (0, io_1.walkSync)(dir, (fullPath, isDir) => {
+            // source file?
             if (!isDir && file_1.PartialSourceFile.isPartialSourceFile(fullPath)) {
                 files.push(fullPath);
+            }
+            // ignore?
+            const dir = path.basename(fullPath);
+            if (this.cfg.ignoreSrcDirs && this.cfg.ignoreSrcDirs.includes(dir)) {
+                return false;
             }
             return isDir;
         });

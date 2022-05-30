@@ -3,6 +3,9 @@ export interface DevGuideCfg {
   /** Directory with documentation source files. */
   srcDir: string;
 
+  /** Source directories to ignore. */
+  ignoreSrcDirs?: string[];
+
   /** Directories with source code files from which to pull partials. */
   partialSrcDirs: string[];
 

@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from'path';
 
 import { DevGuideCfg } from '../DevGuideCfg';
 import { PartialSourceFile } from '../file';
@@ -16,9 +17,17 @@ export class DocPartialCrawler {
   private findFilesInDir(dir: string): string[] {
     const files: string[] = [];
     walkSync(dir, (fullPath: string, isDir: boolean) => {
+    // source file?
       if (!isDir && PartialSourceFile.isPartialSourceFile(fullPath)) {
         files.push(fullPath);
       }
+
+    // ignore?
+      const dir = path.basename(fullPath);
+      if (this.cfg.ignoreSrcDirs && this.cfg.ignoreSrcDirs.includes(dir)) {
+        return false;
+      }
+
       return isDir;
     });
     return files;
